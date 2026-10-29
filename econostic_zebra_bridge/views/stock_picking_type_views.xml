@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_picking_type_form_zebra_bridge" model="ir.ui.view">
+        <field name="name">stock.picking.type.form.zebra.bridge</field>
+        <field name="model">stock.picking.type</field>
+        <field name="inherit_id" ref="stock.view_picking_type_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='hardware']/group[@name='auto_print']" position="after">
+                <group name="zebra_bridge" string="Pont mobile Zebra (PDA Android)">
+                    <group>
+                        <field name="zebra_bridge_enabled"/>
+                        <field name="zebra_bridge_fallback" invisible="not zebra_bridge_enabled"/>
+                        <field name="zebra_copies" invisible="not zebra_bridge_enabled"/>
+                        <field name="zebra_lot_report_id" invisible="not zebra_bridge_enabled"
+                               options="{'no_create': True}" groups="stock.group_production_lot"/>
+                    </group>
+                    <group>
+                        <div colspan="2" class="text-muted" invisible="not zebra_bridge_enabled">
+                            Seuls les formats <b>ZPL</b> cochés ci-dessus (étiquettes produits, lots/N° de série,
+                            étiquette colis) partent vers le PDA de l'opérateur qui valide, quel que soit
+                            l'écran utilisé (formulaire, Code-barres web ou application mobile Odoo).
+                            Les documents PDF restent imprimés de façon standard.
+                        </div>
+                    </group>
+                </group>
+            </xpath>
+        </field>
+    </record>
+</odoo>

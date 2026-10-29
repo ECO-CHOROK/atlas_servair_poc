@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="menu_zebra_bridge_root" name="Pont mobile Zebra"
+              parent="stock.menu_stock_config_settings" sequence="60"
+              groups="stock.group_stock_manager"/>
+    <menuitem id="menu_zebra_bridge_device" name="PDA appairés"
+              parent="menu_zebra_bridge_root" action="action_zebra_bridge_device" sequence="10"/>
+    <menuitem id="menu_zebra_print_job" name="Travaux d'impression"
+              parent="menu_zebra_bridge_root" action="action_zebra_print_job" sequence="20"/>
+</odoo>

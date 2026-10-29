@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="zebra_bridge_pairing_wizard_form" model="ir.ui.view">
+        <field name="name">zebra.bridge.pairing.wizard.form</field>
+        <field name="model">zebra.bridge.pairing.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Appairer le PDA">
+                <div class="text-center">
+                    <field name="qr_image" widget="image" readonly="1" options="{'size': [300, 300]}" nolabel="1"/>
+                </div>
+                <p class="mt-3">
+                    Sur le PDA, ouvrez l'application <b>Pont Zebra</b>, touchez le champ d'appairage du bloc
+                    <b>Odoo</b> puis scannez ce QR code avec la gâchette du terminal.
+                    Ce code n'est affiché qu'une fois : tout nouvel appairage révoque le précédent.
+                </p>
+                <group>
+                    <field name="server_url" readonly="1"/>
+                    <field name="payload" readonly="1" widget="CopyClipboardChar"/>
+                    <field name="token" invisible="1"/>
+                    <field name="device_id" invisible="1"/>
+                </group>
+                <footer>
+                    <button string="Terminé" class="btn-primary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

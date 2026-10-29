@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_picking_form_zebra_bridge" model="ir.ui.view">
+        <field name="name">stock.picking.form.zebra.bridge</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.view_picking_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//header" position="inside">
+                <field name="zebra_bridge_enabled" invisible="1"/>
+                <button name="action_zebra_bridge_print" type="object" string="Étiquettes Zebra"
+                        icon="fa-print" invisible="not zebra_bridge_enabled or state != 'done'"
+                        groups="stock.group_stock_user"/>
+            </xpath>
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button name="action_view_zebra_jobs" type="object" class="oe_stat_button" icon="fa-print"
+                        invisible="zebra_job_count == 0">
+                    <field name="zebra_job_count" widget="statinfo" string="Impressions Zebra"/>
+                </button>
+            </xpath>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Étiquette lot + DLC/DDM pour imprimante mobile 3 pouces (ZQ511 / ZQ521), 203 dpi.
+         Format : 72 mm x 50 mm (576 x 400 points). Une étiquette par enregistrement transmis :
+         « une par lot » ou « une par unité » selon le réglage du type d'opération. -->
+    <record id="report_lot_label_dlc_zpl" model="ir.actions.report">
+        <field name="name">Étiquette lot + DLC (ZPL 72 x 50 mm)</field>
+        <field name="model">stock.lot</field>
+        <field name="report_type">qweb-text</field>
+        <field name="report_name">econostic_zebra_bridge.label_lot_dlc_zpl_view</field>
+        <field name="report_file">econostic_zebra_bridge.label_lot_dlc_zpl_view</field>
+        <field name="binding_model_id" ref="stock.model_stock_lot"/>
+        <field name="binding_type">report</field>
+    </record>
+
+    <template id="label_lot_dlc_zpl_view">
+        <t t-foreach="docs" t-as="lot">
+            <t t-set="v" t-value="lot._zebra_label_values()"/>
+            <t t-translation="off">
+^XA^CI28^PW576^LL400^LH0,0
+^FO20,15^A0N,30,28^FB536,2,0,L^FD<t t-out="v['product']"/>^FS
+<t t-if="v['ref']">^FO20,82^A0N,24,22^FDRéf. <t t-out="v['ref']"/>^FS
+</t>^FO20,115^A0N,36,34^FDLot : <t t-out="v['lot']"/>^FS
+<t t-if="v['dlc']">^FO20,160^GB536,48,2^FS
+^FO32,170^A0N,34,32^FDDLC : <t t-out="v['dlc']"/>^FS
+</t><t t-if="v['ddm']">^FO310,170^A0N,28,26^FDDDM : <t t-out="v['ddm']"/>^FS
+</t>^FO40,222^BY2,3,110^BCN,110,Y,N,N^FD<t t-out="v['lot_barcode']"/>^FS
+^FO20,372^A0N,20,20^FDImprimé le <t t-out="v['printed']"/>^FS
+^XZ
+</t>
+        </t>
+    </template>
+</odoo>

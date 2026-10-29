@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="zebra_print_job_list" model="ir.ui.view">
+        <field name="name">zebra.print.job.list</field>
+        <field name="model">zebra.print.job</field>
+        <field name="arch" type="xml">
+            <list string="Travaux d'impression" create="0"
+                  decoration-danger="state == 'error'" decoration-muted="state == 'cancel'"
+                  decoration-info="state in ('pending', 'sent')">
+                <field name="create_date" string="Créé le"/>
+                <field name="name"/>
+                <field name="user_id" widget="many2one_avatar_user"/>
+                <field name="device_id"/>
+                <field name="label_count"/>
+                <field name="state" widget="badge"
+                       decoration-success="state == 'done'" decoration-danger="state == 'error'"
+                       decoration-info="state in ('pending', 'sent')"/>
+                <field name="error_message" optional="show"/>
+                <button name="action_retry" type="object" icon="fa-repeat" title="Réimprimer"
+                        invisible="state not in ('error', 'cancel', 'done')"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="zebra_print_job_form" model="ir.ui.view">
+        <field name="name">zebra.print.job.form</field>
+        <field name="model">zebra.print.job</field>
+        <field name="arch" type="xml">
+            <form string="Travail d'impression" create="0">
+                <header>
+                    <button name="action_retry" type="object" string="Réimprimer"
+                            invisible="state not in ('error', 'cancel', 'done')"/>
+                    <button name="action_cancel" type="object" string="Annuler"
+                            invisible="state not in ('pending', 'sent', 'error')"/>
+                    <field name="state" widget="statusbar" statusbar_visible="pending,sent,done"/>
+                </header>
+                <sheet>
+                    <h1><field name="name" readonly="1"/></h1>
+                    <group>
+                        <group>
+                            <field name="user_id" readonly="1"/>
+                            <field name="device_id" readonly="state not in ('pending', 'error')"/>
+                            <field name="picking_ids" widget="many2many_tags" readonly="1"/>
+                            <field name="report_id" readonly="1"/>
+                        </group>
+                        <group>
+                            <field name="label_count"/>
+                            <field name="copies" readonly="state != 'pending'"/>
+                            <field name="queued_at"/>
+                            <field name="date_sent"/>
+                            <field name="date_done"/>
+                            <field name="attempt_count"/>
+                            <field name="error_message"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="ZPL" name="zpl" groups="stock.group_stock_manager">
+                            <field name="zpl" readonly="1" class="font-monospace"/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="zebra_print_job_search" model="ir.ui.view">
+        <field name="name">zebra.print.job.search</field>
+        <field name="model">zebra.print.job</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="picking_ids"/>
+                <field name="user_id"/>
+                <field name="device_id"/>
+                <filter name="in_progress" string="En cours" domain="[('state', 'in', ('pending', 'sent'))]"/>
+                <filter name="errors" string="En erreur" domain="[('state', '=', 'error')]"/>
+                <filter name="mine" string="Mes impressions" domain="[('user_id', '=', uid)]"/>
+                <separator/>
+                <filter name="today" string="Aujourd'hui"
+                        domain="[('create_date', '&gt;=', context_today().strftime('%Y-%m-%d 00:00:00'))]"/>
+                <group expand="0" string="Regrouper par">
+                    <filter name="group_device" string="PDA" context="{'group_by': 'device_id'}"/>
+                    <filter name="group_state" string="État" context="{'group_by': 'state'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_zebra_print_job" model="ir.actions.act_window">
+        <field name="name">Travaux d'impression Zebra</field>
+        <field name="res_model">zebra.print.job</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="zebra_print_job_search"/>
+    </record>
+</odoo>

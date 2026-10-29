@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="zebra_bridge_device_list" model="ir.ui.view">
+        <field name="name">zebra.bridge.device.list</field>
+        <field name="model">zebra.bridge.device</field>
+        <field name="arch" type="xml">
+            <list string="PDA pont Zebra">
+                <field name="name"/>
+                <field name="user_ids" widget="many2many_tags"/>
+                <field name="is_online" widget="boolean_toggle" readonly="1"/>
+                <field name="last_seen"/>
+                <field name="printer_name"/>
+                <field name="printer_transport"/>
+                <field name="printer_status"/>
+                <field name="printer_battery" optional="show"/>
+                <field name="pending_job_count" string="En cours"/>
+                <field name="error_job_count" string="Erreurs" decoration-danger="error_job_count &gt; 0"/>
+                <field name="company_id" groups="base.group_multi_company" optional="hide"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="zebra_bridge_device_form" model="ir.ui.view">
+        <field name="name">zebra.bridge.device.form</field>
+        <field name="model">zebra.bridge.device</field>
+        <field name="arch" type="xml">
+            <form string="PDA pont Zebra">
+                <header>
+                    <button name="action_pair" type="object" string="Appairer (QR code)" class="btn-primary"
+                            invisible="paired"/>
+                    <button name="action_pair" type="object" string="Ré-appairer" invisible="not paired"
+                            confirm="Le jeton actuel sera révoqué et le PDA devra être ré-appairé. Continuer ?"/>
+                    <button name="action_send_test_label" type="object" string="Imprimer une étiquette de test"
+                            invisible="not paired"/>
+                    <button name="action_revoke" type="object" string="Révoquer" invisible="not paired"
+                            confirm="Le PDA ne pourra plus imprimer. Continuer ?"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_jobs" type="object" class="oe_stat_button" icon="fa-print">
+                            <field name="pending_job_count" widget="statinfo" string="En cours"/>
+                        </button>
+                    </div>
+                    <widget name="web_ribbon" title="En ligne" bg_color="text-bg-success" invisible="not is_online"/>
+                    <widget name="web_ribbon" title="Hors ligne" bg_color="text-bg-secondary" invisible="is_online or not paired"/>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1><field name="name" placeholder="TC26 Réception 1"/></h1>
+                    </div>
+                    <group>
+                        <group string="Affectation">
+                            <field name="user_ids" widget="many2many_tags" options="{'no_create': True}"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                            <field name="poll_interval"/>
+                            <field name="active" invisible="1"/>
+                            <field name="paired" invisible="1"/>
+                            <field name="is_online" invisible="1"/>
+                        </group>
+                        <group string="Terminal">
+                            <field name="token_hint"/>
+                            <field name="last_seen"/>
+                            <field name="android_model"/>
+                            <field name="app_version"/>
+                        </group>
+                        <group string="Imprimante Zebra liée">
+                            <field name="printer_name"/>
+                            <field name="printer_serial"/>
+                            <field name="printer_transport"/>
+                            <field name="printer_address"/>
+                            <field name="printer_connected"/>
+                            <field name="printer_status"/>
+                            <field name="printer_battery"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_zebra_bridge_device" model="ir.actions.act_window">
+        <field name="name">PDA pont Zebra</field>
+        <field name="res_model">zebra.bridge.device</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Déclarer un PDA</p>
+            <p>Chaque PDA Android équipé de l'application « Pont Zebra » imprime les étiquettes
+               ZPL des opérateurs qui lui sont rattachés, sur l'imprimante Zebra appairée.</p>
+        </field>
+    </record>
+</odoo>
