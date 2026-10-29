@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Odoo on-premise : autorise un certificat d'autorité interne installé sur le PDA (MDM)
+     et le HTTP en clair sur le réseau local. Préférer HTTPS en production. -->
+<network-security-config>
+    <base-config cleartextTrafficPermitted="true">
+        <trust-anchors>
+            <certificates src="system" />
+            <certificates src="user" />
+        </trust-anchors>
+    </base-config>
+</network-security-config>
